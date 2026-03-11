@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="container">
+        <div class="header-left">
+          <h1>Student Management</h1>
+          <span class="subtitle">Spring Boot · JPA · MVC</span>
+        </div>
+        <div class="header-meta">
+          <div class="header-stat">
+            <span class="stat-value" th:text="${students.size()}">0</span>
+            <span class="stat-label">Registered</span>
+          </div>
+          <div class="header-divider"></div>
+          <div class="header-stat">
+            <span class="stat-value">v1</span>
+            <span class="stat-label">Version</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- FLASH MESSAGES -->
+      <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-error" role="alert">
+        <span th:text="${errorMessage}"></span>
+      </div>
+
+      <!-- REGISTRATION FORM -->
+      <section class="form-section">
+        <p class="section-label">Registration</p>
+
+        <form
+          th:action="@{/students}"
+          th:object="${student}"
+          method="post"
+          novalidate
+        >
+          <div class="form-grid">
+            <!-- Name -->
+            <div
+              class="form-group"
+              th:classappend="${#fields.hasErrors('name')} ? 'has-error'"
+            >
+              <label for="name"
+                >Full Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="name"
+                th:field="*{name}"
+                placeholder="Alice Smith"
+                autocomplete="name"
+              />
+              <span
+                class="field-error"
+                th:if="${#fields.hasErrors('name')}"
+                th:errors="*{name}"
+              ></span>
+            </div>
+
+            <!-- Email -->
+            <div
+              class="form-group"
+              th:classappend="${#fields.hasErrors('email')} ? 'has-error'"
+            >
+              <label for="email"
+                >Email Address <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                th:field="*{email}"
+                placeholder="alice@example.com"
+                autocomplete="email"
+              />
+              <span
+                class="field-error"
+                th:if="${#fields.hasErrors('email')}"
+                th:errors="*{email}"
+              ></span>
+            </div>
+
+            <!-- Course -->
+            <div
+              class="form-group full-width"
+              th:classappend="${#fields.hasErrors('course')} ? 'has-error'"
+            >
+              <label for="course">Course <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select id="course" th:field="*{course}">
+                  <option value="">Select a course</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">
+                    Information Technology
+                  </option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Artificial Intelligence">
+                    Artificial Intelligence
+                  </option>
+                  <option value="Cybersecurity">Cybersecurity</option>
+                  <option value="Software Engineering">
+                    Software Engineering
+                  </option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Business Administration">
+                    Business Administration
+                  </option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <span
+                class="field-error"
+                th:if="${#fields.hasErrors('course')}"
+                th:errors="*{course}"
+              ></span>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Register Student
+              </button>
+              <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- STUDENT TABLE -->
+      <section class="table-section">
+        <div class="table-header-row">
+          <p class="section-label">All Students</p>
+          <span class="count-pill" th:text="${students.size()} + ' total'"
+            >0 total</span
+          >
+        </div>
+
+        <div th:if="${students.empty}" class="empty-state">
+          <p>
+            No students registered yet. Use the form above to add the first
+            record.
+          </p>
+        </div>
+
+        <div th:if="${!students.empty}" class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="student, iterStat : ${students}">
+                <td class="id-cell" th:text="${iterStat.count}">1</td>
+                <td class="id-cell" th:text="${student.id}">1</td>
+                <td th:text="${student.name}">Name</td>
+                <td th:text="${student.email}">email@example.com</td>
+                <td class="course-cell" th:text="${student.course}">Course</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- API REFERENCE -->
+      <section class="api-section">
+        <p class="section-label">REST API</p>
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Endpoint</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="method-badge post">POST</span></td>
+              <td><code>/api/students</code></td>
+              <td>Create a new student</td>
+            </tr>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td><code>/api/students</code></td>
+              <td>Retrieve all students</td>
+            </tr>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td><code>/api/students/{id}</code></td>
+              <td>Get student by ID</td>
+            </tr>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td><code>/api/students/course/{course}</code></td>
+              <td>Get students by course</td>
+            </tr>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td><code>/h2-console</code></td>
+              <td>Database console (dev only)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-inner">
+          <span class="footer-brand">Student Management System</span>
+          <span class="footer-stack"
+            >Spring Boot &nbsp;·&nbsp; Hibernate JPA &nbsp;·&nbsp; MySQL
+            &nbsp;·&nbsp; Thymeleaf</span
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

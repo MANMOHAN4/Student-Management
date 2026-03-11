@@ -1,0 +1,41 @@
+# ── Compiled Output ───────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# ── Environment & Secrets ─────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── IDE — IntelliJ ────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ── IDE — Eclipse ─────────────────────────────────────
+.eclipse/
+.settings/
+.classpath
+.project
+
+# ── IDE — VS Code ─────────────────────────────────────
+.vscode/
+
+# ── Maven ─────────────────────────────────────────────
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ── Logs ──────────────────────────────────────────────
+*.log
+logs/
+spring.log
+
+# ── OS ────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
